@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,15 +32,35 @@ public class Image extends BetaFace{
     private static Logger log = Logger.getLogger(Image.class.getName());
 
     public Image(String file) throws IOException {
+
+        if(debug)
+            log.info("Build image from file");
+
         byte[] temp = readFile(file);
         imageBuffered = checkSize(temp);
         this.imageBytes = convertBuffImageToByteArray(imageBuffered);
     }
 
     public Image(byte[] file) throws IOException {
+
+        if(debug)
+            log.info("Build image from byte array");
+
          byte[] temp = file;
          imageBuffered = checkSize(temp);
          this.imageBytes = convertBuffImageToByteArray(imageBuffered);
+    }
+
+    public Image(URL url) throws IOException {
+
+        if(debug)
+            log.info("Build image from HTTP url");
+
+        BufferedImage img = ImageIO.read(url);
+        byte[] temp = convertBuffImageToByteArray(img);
+
+        imageBuffered = checkSize(temp);
+        this.imageBytes = convertBuffImageToByteArray(imageBuffered);
     }
 
     // Resize image
@@ -107,11 +128,11 @@ public class Image extends BetaFace{
 
     private byte[] convertBuffImageToByteArray(BufferedImage img) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(imageBuffered, "jpg", baos);
+        ImageIO.write(img, "jpg", baos);
         return baos.toByteArray();
     }
 
-    //  Convert byte array image to BufferedImage
+    //  Check image size
     /////////////////////////////////////////////////
 
     private BufferedImage checkSize(byte[] image) throws IOException
@@ -130,7 +151,7 @@ public class Image extends BetaFace{
         return buffImage;
     }
 
-    // Send file to Betaface
+    // Send image and get faces UID
     /////////////////////////////////////////////////
 
     public ArrayList<Face> getFaces () throws IOException, JDOMException, InterruptedException {
@@ -152,7 +173,7 @@ public class Image extends BetaFace{
         rootElement.addContent(new Element("imagefile_data").addContent(encode64(imageBytes)));
         rootElement.addContent(new Element("original_filename").addContent("temp.jpg"));
 
-        String content = proccess("/UploadNewImage_File", new Document(rootElement));
+        String content = process("/UploadNewImage_File", new Document(rootElement));
 
         SAXBuilder builder = new SAXBuilder();
         Reader in = new StringReader(content);
@@ -201,7 +222,7 @@ public class Image extends BetaFace{
             rootElement.addContent(new Element("api_secret").addContent(apiSecret));
             rootElement.addContent(new Element("img_uid").addContent(uid));
 
-            String contents = proccess("/GetImageInfo", new Document(rootElement));
+            String contents = process("/GetImageInfo", new Document(rootElement));
 
             SAXBuilder builder = new SAXBuilder();
             Reader in = new StringReader(contents);

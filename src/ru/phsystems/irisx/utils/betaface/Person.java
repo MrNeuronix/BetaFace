@@ -94,7 +94,7 @@ public class Person extends BetaFace {
         rootElement.addContent(faceUids);
         rootElement.addContent(new Element("person_id").addContent(personName))
         ;
-        String content = proccess("/Faces_SetPerson", new Document(rootElement));
+        String content = process("/Faces_SetPerson", new Document(rootElement));
 
         SAXBuilder builder = new SAXBuilder();
         Reader in = new StringReader(content);
@@ -139,7 +139,7 @@ public class Person extends BetaFace {
 
         rootElement.addContent(targets);
 
-        String content = proccess("/Faces_Recognize", new Document(rootElement));
+        String content = process("/Faces_Recognize", new Document(rootElement));
 
         SAXBuilder builder = new SAXBuilder();
         Reader in = new StringReader(content);
@@ -166,7 +166,7 @@ public class Person extends BetaFace {
             rootElement.addContent(new Element("api_secret").addContent(apiSecret));
             rootElement.addContent(new Element("recognize_uid").addContent(recUID));
 
-            String content = proccess("/GetRecognizeResult", new Document(rootElement));
+            String content = process("/GetRecognizeResult", new Document(rootElement));
 
             SAXBuilder builder = new SAXBuilder();
             Reader in = new StringReader(content);
@@ -184,7 +184,7 @@ public class Person extends BetaFace {
                     Element faceInfo = facesRoot.get(i).getChild("matches").getChild("PersonMatchInfo");
 
                     if(debug)
-                        log.info("Process face "+i);
+                        log.info("Process face " + i);
 
                     if(Boolean.valueOf(faceInfo.getChild("is_match").getText()) == true)
                     {

@@ -28,10 +28,10 @@ public class BetaFace {
     public static final int MAXHEIGHT = 640;
     public boolean debug = false;
 
-    protected String apiKey = "d45fd466-51e2-4701-8da8-04351c872236";
-    protected String apiSecret = "171e8465-f548-401d-b63b-caf0dc28df5f";
+    protected final String apiKey = "d45fd466-51e2-4701-8da8-04351c872236";
+    protected final String apiSecret = "171e8465-f548-401d-b63b-caf0dc28df5f";
+    protected final String serviceURL = "http://www.betafaceapi.com/service.svc";
 
-    protected String serviceURL = "http://www.betafaceapi.com/service.svc";
     private static Logger log = Logger.getLogger(BetaFace.class.getName());
 
     // Constructor
@@ -40,7 +40,7 @@ public class BetaFace {
     public BetaFace() {}
 
      // Common method for send info
-    public String proccess(String urlString, Document doc) throws IOException {
+    public String process(String urlString, Document doc) throws IOException {
 
         HttpURLConnection connection = null;
 
@@ -92,34 +92,41 @@ public class BetaFace {
         System.out.println("Start BetaFace API test!");
 
         // image settings
+        // we can load image from file, byte array or http url
         Image img1 = new Image("1.jpg");
         Image img2 = new Image("2.jpg");
-        Image img3 = new Image("3.jpg");
+        Image img3 = new Image(new URL("http://my-hit.ru/images/film/wall/5380/11816_1024.jpg"));
 
+        // get arraylist with detected faces
         ArrayList<Face> faces0 = img1.getFaces();
         ArrayList<Face> faces1 = img2.getFaces();
         ArrayList<Face> faces2 = img3.getFaces();
 
+        // some debug :)
         System.out.println("UID1: "+faces0.get(0).getUID()+"\nUID2: "+faces1.get(0).getUID()+"\nUID3: "+faces2.get(0).getUID()+"\nUID4: "+faces2.get(1).getUID());
 
-        //person settings
-        Person nix = new Person();
-        nix.setName("Nikolay Viguro");
-        nix.addUID(faces0.get(0).getUID());
-        nix.addUID(faces1.get(0).getUID());
-        boolean flag = nix.rememberPerson();
+        //add person and set friendly name
+        Person NikolayViguro = new Person();
+        NikolayViguro.setName("Nikolay Viguro");
 
-        System.out.println("Person saved = "+flag);
+        // add UIDs, where we present
+        NikolayViguro.addUID(faces0.get(0).getUID());
+        NikolayViguro.addUID(faces1.get(0).getUID());
 
-        //prepare uid list
+        // and save person on betaface
+        boolean flag = NikolayViguro.rememberPerson();
+
+        System.out.println("Person saved = " + flag);
+
+        //prepare UID list, witch we will compare our person
         ArrayList<String> list = new ArrayList<String>();
         list.add(faces0.get(0).getUID());
         list.add(faces1.get(0).getUID());
         list.add(faces2.get(0).getUID());
         list.add(faces2.get(1).getUID());
 
-        // recognize
-        System.out.println("Is Nikolay Viguro present on images? "+nix.compareWithUIDs(list));
+        // compare
+        System.out.println("Is Nikolay Viguro present on images? " + NikolayViguro.compareWithUIDs(list));
     }
 
 }
