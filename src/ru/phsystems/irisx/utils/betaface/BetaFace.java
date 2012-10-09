@@ -26,7 +26,7 @@ public class BetaFace {
 
     public static final int MAXWIDTH = 480;
     public static final int MAXHEIGHT = 640;
-    public boolean debug = false;
+    public static boolean debug = false;
 
     protected final String apiKey = "d45fd466-51e2-4701-8da8-04351c872236";
     protected final String apiSecret = "171e8465-f548-401d-b63b-caf0dc28df5f";
@@ -90,6 +90,9 @@ public class BetaFace {
     public static void main(String[] args) throws IOException, JDOMException, InterruptedException {
 
         System.out.println("Start BetaFace API test!");
+
+        // set debug to true
+        BetaFace.debug = true;
 
         // image settings
         // we can load image from file, byte array or http url
