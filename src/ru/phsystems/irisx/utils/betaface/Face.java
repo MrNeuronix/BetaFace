@@ -12,6 +12,7 @@ package ru.phsystems.irisx.utils.betaface;
 public class Face extends BetaFace {
 
     private String faceUID;
+    private String gender = "none";
 
     public Face ()
     {
@@ -26,5 +27,15 @@ public class Face extends BetaFace {
     public String getUID ()
     {
         return faceUID;
+    }
+
+    public void setGender (String gender)
+    {
+        this.gender = gender;
+    }
+
+    public String getGender ()
+    {
+        return gender;
     }
 }

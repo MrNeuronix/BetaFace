@@ -244,6 +244,7 @@ public class Image extends BetaFace{
             Face face = new Face();
 
             face.setUID(faceInfo.getChild("uid").getText());
+            face.setGender(faceInfo.getChild("gender").getText());
             //TODO add more face params from xml
 
             faces.add(face);
