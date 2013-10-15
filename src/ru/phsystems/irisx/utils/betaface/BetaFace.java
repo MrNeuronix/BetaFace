@@ -77,7 +77,7 @@ public class BetaFace {
         String content = "";
 
         while( (bytesRead = input.read(contents)) != -1){
-            content = new String(contents, 0, bytesRead);
+            content += new String(contents, 0, bytesRead);
         }
 
         return content;
